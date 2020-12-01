@@ -45,7 +45,9 @@ Interesting approaches:
 
 # Takeaways
 
-* None yet.
+* Day 01 (Report Repair): Oops, make sure you know what each potential parsing line of your template does.
+  Used the "array of ints for each line" parser instead of the "one int for each line" parser, leading to no sums being found.
+  (Also an outage prevented submitting on time)
 
 # Posting schedule and policy
 
