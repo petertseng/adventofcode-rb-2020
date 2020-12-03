@@ -48,6 +48,8 @@ Interesting approaches:
 * Day 01 (Report Repair): Oops, make sure you know what each potential parsing line of your template does.
   Used the "array of ints for each line" parser instead of the "one int for each line" parser, leading to no sums being found.
   (Also an outage prevented submitting on time)
+* Day 03 (Toboggan Trajectory): Read the bolded portion carefully and assume nothing!
+  Even though the problem statement says "Determine the number of trees... for each of the following slopes" and you'd think that would be a summation, the problem statement clearly requested a product in bolded text.
 
 # Posting schedule and policy
 
