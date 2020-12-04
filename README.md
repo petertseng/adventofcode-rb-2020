@@ -50,6 +50,9 @@ Interesting approaches:
   (Also an outage prevented submitting on time)
 * Day 03 (Toboggan Trajectory): Read the bolded portion carefully and assume nothing!
   Even though the problem statement says "Determine the number of trees... for each of the following slopes" and you'd think that would be a summation, the problem statement clearly requested a product in bolded text.
+* Day 04 (Passport Processing): Don't become so used to parsing the input one line at a time that you miss an obvious approach.
+  Reading the entire input and splitting by `"\n\n"` was a far simpler approach than the one taken on release, which was:
+  Going line by line, accumulating the lines, adding them when you find an empty line, and then having to remember to add the very last accumulated group after iteration is over.
 
 # Posting schedule and policy
 
