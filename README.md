@@ -53,6 +53,14 @@ Interesting approaches:
 * Day 04 (Passport Processing): Don't become so used to parsing the input one line at a time that you miss an obvious approach.
   Reading the entire input and splitting by `"\n\n"` was a far simpler approach than the one taken on release, which was:
   Going line by line, accumulating the lines, adding them when you find an empty line, and then having to remember to add the very last accumulated group after iteration is over.
+* Day 05 (Binary Boarding): Don't forget to check the answer is reasonable for the problem.
+  Reading "the seats with IDs +1 and -1 from yours will be in your list" meant this code was written:
+
+  ```ruby
+  (seats.min..seats.max).find { |x| seats.include?(x - 1) && seats.include?(x + 1) }
+  ```
+
+  This is wildly incorrect since it simply selects `seats.min + 1`. Need to check `!seats.include?(x)` as well.
 
 # Posting schedule and policy
 
