@@ -61,6 +61,10 @@ Interesting approaches:
   ```
 
   This is wildly incorrect since it simply selects `seats.min + 1`. Need to check `!seats.include?(x)` as well.
+* Day 06 (Custom Customs): No real takeaway here except maybe to be careful about typing the answer correctly.
+  I attempted to submit the answer via `curl`, but it hung (others were experiencing unpredictable issues that day as well).
+  I tried to submit via the website but transposed two digits, and the one minute penalty cost almost exactly 50 points.
+  Simply retrying the `curl` may have succeeded.
 
 # Posting schedule and policy
 
