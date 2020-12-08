@@ -41,7 +41,7 @@ Favourite problems:
 
 Interesting approaches:
 
-* None yet.
+* Day 08 (Handheld Halting): Construct set of instructions that halt, then look for an instruction that can flip such that you land in that set.
 
 # Takeaways
 
@@ -65,6 +65,9 @@ Interesting approaches:
   I attempted to submit the answer via `curl`, but it hung (others were experiencing unpredictable issues that day as well).
   I tried to submit via the website but transposed two digits, and the one minute penalty cost almost exactly 50 points.
   Simply retrying the `curl` may have succeeded.
+* Day 08 (Handheld Halting): Skimming the problem statement caused implementing extra unnecessary logic.
+  The problem statement has clearly stated that since there's no control flow, any attempt to execute an instruction twice constitutes a loop.
+  Missing this and instead writing code to only run for N instructions wasted time.
 
 # Posting schedule and policy
 
