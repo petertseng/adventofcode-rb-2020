@@ -68,6 +68,22 @@ Interesting approaches:
 * Day 08 (Handheld Halting): Skimming the problem statement caused implementing extra unnecessary logic.
   The problem statement has clearly stated that since there's no control flow, any attempt to execute an instruction twice constitutes a loop.
   Missing this and instead writing code to only run for N instructions wasted time.
+* Day 09 (Encoding Error): Even if doing a brute-force approach just for the leaderboard, make sure it's bounded.
+  Code was of the general form:
+
+  ```ruby
+    nums.each_index { |i|
+      2.step { |winsize|
+        if nums[i, winsize].sum == target
+          ...
+        end
+      }
+    }
+  ```
+
+  This is incorrect because winsize increases without bound, summing the same elements over and over uselessly.
+  It needs to be bounded above by the size of the array, such as `(2..nums.size).each { |winsize| ... }`.
+  Perhaps printing out the sums would have been helpful.
 
 # Posting schedule and policy
 
