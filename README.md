@@ -84,6 +84,10 @@ Interesting approaches:
   This is incorrect because winsize increases without bound, summing the same elements over and over uselessly.
   It needs to be bounded above by the size of the array, such as `(2..nums.size).each { |winsize| ... }`.
   Perhaps printing out the sums would have been helpful.
+* Day 10 (Adapter Array): Read problem statement carefully and don't assume the problem is harder than it is.
+  Problem statement says the adapter can only accept **lower** joltages, not higher.
+  Therefore, to use all the adapters must require taking them in ascending order.
+  Instead, wasted time with BFS (no good, BFS finds a shortest path but we need a longest) or Hamiltonian (maybe workable if the neighbour function was understood correctly, but still time-wasting).
 
 # Posting schedule and policy
 
