@@ -42,6 +42,7 @@ Favourite problems:
 Interesting approaches:
 
 * Day 08 (Handheld Halting): Construct set of instructions that halt, then look for an instruction that can flip such that you land in that set.
+* Day 11 (Seating System): Use reasoning about seats that must permanently remain empty or occupied.
 
 # Takeaways
 
@@ -88,6 +89,10 @@ Interesting approaches:
   Problem statement says the adapter can only accept **lower** joltages, not higher.
   Therefore, to use all the adapters must require taking them in ascending order.
   Instead, wasted time with BFS (no good, BFS finds a shortest path but we need a longest) or Hamiltonian (maybe workable if the neighbour function was understood correctly, but still time-wasting).
+* Day 11 (Seating System): Don't prematurely optimise.
+  If caching, don't let cached values collide.
+  Tried to cache `seat_in_direction`, but forgot to include `dy` and `dx` in the cache key and instead only used `y` and `x`, which is patently wrong.
+  Caching wasn't even necessary - the code would have run fast enough to get on the leaderboard (a few seconds) without it.
 
 # Posting schedule and policy
 
