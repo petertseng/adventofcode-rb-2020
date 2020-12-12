@@ -37,12 +37,13 @@ Some may additionally support other ways:
 
 Favourite problems:
 
-* None yet.
+* Day 12 (Rain Risk): Fun way to reduce code duplication between the two parts (the two parts each have a movable object and a turnable object).
 
 Interesting approaches:
 
 * Day 08 (Handheld Halting): Construct set of instructions that halt, then look for an instruction that can flip such that you land in that set.
 * Day 11 (Seating System): Use reasoning about seats that must permanently remain empty or occupied.
+* Day 12 (Rain Risk): Fun way to reduce code duplication between the two parts (the two parts each have a movable object and a turnable object).
 
 # Takeaways
 
