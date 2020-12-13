@@ -31,7 +31,7 @@ In general, all solutions can be invoked in both of the following ways:
 
 Some may additionally support other ways:
 
-* None yet
+* Day 13 (Shuttle Search): If providing a comma-separated list on ARGV, will compute only part 2 on that list, skipping part 1.
 
 # Highlights
 
@@ -44,6 +44,7 @@ Interesting approaches:
 * Day 08 (Handheld Halting): Construct set of instructions that halt, then look for an instruction that can flip such that you land in that set.
 * Day 11 (Seating System): Use reasoning about seats that must permanently remain empty or occupied.
 * Day 12 (Rain Risk): Fun way to reduce code duplication between the two parts (the two parts each have a movable object and a turnable object).
+* Day 13 (Shuttle Search): Supports bus intervals that are not pairwise coprime.
 
 # Takeaways
 
@@ -94,6 +95,8 @@ Interesting approaches:
   If caching, don't let cached values collide.
   Tried to cache `seat_in_direction`, but forgot to include `dy` and `dx` in the cache key and instead only used `y` and `x`, which is patently wrong.
   Caching wasn't even necessary - the code would have run fast enough to get on the leaderboard (a few seconds) without it.
+* Day 13 (Shuttle Search): When in doubt, trying on the example would be helpful.
+  Looking at `[1068781 % 7, 1068781 % 13, 1068781 % 59, 1068781 % 31, 1068781 % 19]` would have revealed crucial information (the remainders being sought are not `[0, 1, 4, 6, 7]`, but instead the negatives of those).
 
 # Posting schedule and policy
 
