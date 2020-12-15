@@ -32,6 +32,7 @@ In general, all solutions can be invoked in both of the following ways:
 Some may additionally support other ways:
 
 * Day 13 (Shuttle Search): If providing a comma-separated list on ARGV, will compute only part 2 on that list, skipping part 1.
+* Day 15 (Rambunctious Recitation): Can also pass comma-separated or space-separated list of numbers on ARGV.
 
 # Highlights
 
@@ -97,6 +98,8 @@ Interesting approaches:
   Caching wasn't even necessary - the code would have run fast enough to get on the leaderboard (a few seconds) without it.
 * Day 13 (Shuttle Search): When in doubt, trying on the example would be helpful.
   Looking at `[1068781 % 7, 1068781 % 13, 1068781 % 59, 1068781 % 31, 1068781 % 19]` would have revealed crucial information (the remainders being sought are not `[0, 1, 4, 6, 7]`, but instead the negatives of those).
+* Day 15 (Rambunctious Recitation): When there is a high chance of an off-by-one error, it's worth checking on the example input.
+  Not making an off-by-one error on part one still wouldn't have gotten points for part one but would be about 30 more points for part two.
 
 # Posting schedule and policy
 
