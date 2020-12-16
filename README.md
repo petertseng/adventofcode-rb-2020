@@ -100,6 +100,17 @@ Interesting approaches:
   Looking at `[1068781 % 7, 1068781 % 13, 1068781 % 59, 1068781 % 31, 1068781 % 19]` would have revealed crucial information (the remainders being sought are not `[0, 1, 4, 6, 7]`, but instead the negatives of those).
 * Day 15 (Rambunctious Recitation): When there is a high chance of an off-by-one error, it's worth checking on the example input.
   Not making an off-by-one error on part one still wouldn't have gotten points for part one but would be about 30 more points for part two.
+* Day 16 (Ticket Translation): Despite my very best efforts to avoid mutation bugs, it still happened.
+  Buggy code was of the general form:
+
+  ```ruby
+  fields[0], i = fields_for_index.each_with_index.find { |fs, _| fs.size == 1 }
+  confirmed_fields[i] = fields[0]
+  fields_for_index.each { |fs| fs.delete(fields[0]) }
+  ```
+
+  Partway through the iteration, `fields[0]` will become `nil` as it's deleted from itself.
+  Needed to set `field = fields[0]`.
 
 # Posting schedule and policy
 
