@@ -39,6 +39,7 @@ Some may additionally support other ways:
 Favourite problems:
 
 * Day 12 (Rain Risk): Fun way to reduce code duplication between the two parts (the two parts each have a movable object and a turnable object).
+* Day 18 (Operation Order): Not because I did well on it but because of its educational value in parsing.
 
 Interesting approaches:
 
@@ -113,6 +114,8 @@ Interesting approaches:
   Needed to set `field = fields[0]`.
 * Day 17 (Conway Cubes): Do **not** write `dx * dy * dz == 0` as a "shortcut" for `dx == 0 && dy == 0 && dz == 0`; it's wrong (it does `||` instead).
   Use `[-1, 0, 1].repeated_permutation(3) - [Array.new(3, 0)]` instead of nesting loops to loop over neighbours.
+* Day 18 (Operation Order): While it's unfortunate that my first attempt to recursively parse turned out to be right-associative, if I had been in a get-it-done mindset, I would have realised that reversing the string would allow it to work. Passing blocks around can achieve left-associativity, but not easy to think of in the moment.
+  There are solutions that redefined operators and used eval, and while they would have been good for points, they would not really have been of educational value.
 
 # Posting schedule and policy
 
