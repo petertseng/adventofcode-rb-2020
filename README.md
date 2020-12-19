@@ -117,6 +117,8 @@ Interesting approaches:
   Use `[-1, 0, 1].repeated_permutation(3) - [Array.new(3, 0)]` instead of nesting loops to loop over neighbours.
 * Day 18 (Operation Order): While it's unfortunate that my first attempt to recursively parse turned out to be right-associative, if I had been in a get-it-done mindset, I would have realised that reversing the string would allow it to work. Passing blocks around can achieve left-associativity, but not easy to think of in the moment.
   There are solutions that redefined operators and used eval, and while they would have been good for points, they would not really have been of educational value.
+* Day 19 (Monster Messages): In the get-it-done spirit, to get the leaderboard points, I simply wrote `42 31 | 42 42 31 31 | 42 42 42 31 31 31 | ...` a sufficient number of times to match all messages in the input.
+  However, later on, I learned about recursive capture groups.
 
 # Posting schedule and policy
 
