@@ -119,6 +119,7 @@ Interesting approaches:
   There are solutions that redefined operators and used eval, and while they would have been good for points, they would not really have been of educational value.
 * Day 19 (Monster Messages): In the get-it-done spirit, to get the leaderboard points, I simply wrote `42 31 | 42 42 31 31 | 42 42 42 31 31 31 | ...` a sufficient number of times to match all messages in the input.
   However, later on, I learned about recursive capture groups.
+* Day 20 (Jurassic Jigsaw): Reading comprehension! Removing each tile's border is not the same as removing the entirety of all the border tiles of the image! That would have made the example make no sense.
 
 # Posting schedule and policy
 
