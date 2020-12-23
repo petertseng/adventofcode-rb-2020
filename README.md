@@ -33,6 +33,7 @@ Some may additionally support other ways:
 
 * Day 13 (Shuttle Search): If providing a comma-separated list on ARGV, will compute only part 2 on that list, skipping part 1.
 * Day 15 (Rambunctious Recitation): Can also pass comma-separated or space-separated list of numbers on ARGV.
+* Day 23 (Crab Cups): Can also pass the cups on ARGV.
 
 # Highlights
 
@@ -120,6 +121,7 @@ Interesting approaches:
 * Day 19 (Monster Messages): In the get-it-done spirit, to get the leaderboard points, I simply wrote `42 31 | 42 42 31 31 | 42 42 42 31 31 31 | ...` a sufficient number of times to match all messages in the input.
   However, later on, I learned about recursive capture groups.
 * Day 20 (Jurassic Jigsaw): Reading comprehension! Removing each tile's border is not the same as removing the entirety of all the border tiles of the image! That would have made the example make no sense.
+* Day 23 (Crab Cups): Better estimation of whether a problem is still solvable using the right data structure. Was aware that using a linked list would be possible, but incorrectly guessed that 10 million iterations is so many that this was a pattern-finding and cleverness check intead of a datastructure check.
 
 # Posting schedule and policy
 
