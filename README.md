@@ -122,6 +122,7 @@ Interesting approaches:
   However, later on, I learned about recursive capture groups.
 * Day 20 (Jurassic Jigsaw): Reading comprehension! Removing each tile's border is not the same as removing the entirety of all the border tiles of the image! That would have made the example make no sense.
 * Day 23 (Crab Cups): Better estimation of whether a problem is still solvable using the right data structure. Was aware that using a linked list would be possible, but incorrectly guessed that 10 million iterations is so many that this was a pattern-finding and cleverness check intead of a datastructure check.
+* Day 24 (Lobby Layout): I think I should consider using less error-prone parsing methods. I was parsing it character-by-character at first and accidentally appended an 'e' whenever a 'w' was encountered, whereas `scan(/[ns]?[ew]/)` would have been able to extract every single direction with no problems.
 
 # Posting schedule and policy
 
