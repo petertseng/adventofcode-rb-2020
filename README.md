@@ -34,6 +34,7 @@ Some may additionally support other ways:
 * Day 13 (Shuttle Search): If providing a comma-separated list on ARGV, will compute only part 2 on that list, skipping part 1.
 * Day 15 (Rambunctious Recitation): Can also pass comma-separated or space-separated list of numbers on ARGV.
 * Day 23 (Crab Cups): Can also pass the cups on ARGV.
+* Day 25 (Combo Breaker): Can also pass the public keys on ARGV.
 
 # Highlights
 
@@ -123,6 +124,7 @@ Interesting approaches:
 * Day 20 (Jurassic Jigsaw): Reading comprehension! Removing each tile's border is not the same as removing the entirety of all the border tiles of the image! That would have made the example make no sense.
 * Day 23 (Crab Cups): Better estimation of whether a problem is still solvable using the right data structure. Was aware that using a linked list would be possible, but incorrectly guessed that 10 million iterations is so many that this was a pattern-finding and cleverness check intead of a datastructure check.
 * Day 24 (Lobby Layout): I think I should consider using less error-prone parsing methods. I was parsing it character-by-character at first and accidentally appended an 'e' whenever a 'w' was encountered, whereas `scan(/[ns]?[ew]/)` would have been able to extract every single direction with no problems.
+* Day 25 (Combo Breaker): Learned about discrete logarithms!
 
 # Posting schedule and policy
 
