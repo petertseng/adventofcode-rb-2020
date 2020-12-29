@@ -47,6 +47,7 @@ Interesting approaches:
 * Day 11 (Seating System): Use reasoning about seats that must permanently remain empty or occupied.
 * Day 12 (Rain Risk): Fun way to reduce code duplication between the two parts (the two parts each have a movable object and a turnable object).
 * Day 13 (Shuttle Search): Supports bus intervals that are not pairwise coprime.
+* Day 17 (Conway Cubes): Exploit symmetries to unlock reasonable runtimes on higher dimensions.
 
 # Takeaways
 
