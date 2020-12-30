@@ -1,10 +1,10 @@
 # Take advantage of symmetry in the non-XY dimensions:
 # All dimensions are interchangeable so can be reordered,
 # and the starting state has no components in non-XY, so coordinates can be negated.
-def step(now_active, dimensions, weights, ybits, wzbits)
+def step(now_active, rounds, weights, ybits, wzbits)
   # (neighbour count << 1) | self
   neigh_and_self = Hash.new(0)
-  wzshift = wzbits * (dimensions - 2)
+  wzshift = wzbits * (rounds + 1)
   wzmask = (1 << wzshift) - 1
   pos_per_dy = 1 << wzshift
   pos_per_dx = pos_per_dy << ybits
@@ -40,18 +40,27 @@ def step(now_active, dimensions, weights, ybits, wzbits)
 end
 
 # Pack the entire coordinate vector into a single int.
-def compress(x, y, wz, xyoffset, wzoffset, ybits, wzbits)
+# counting-based representation:
+# x, y, higher_dimensions
+# higher_dimensions is a count of how many of each of 0, 1, 2, ... rounds are present.
+def compress(x, y, wz, rounds, xyoffset, ybits, wzbits)
   # Ah, unfortunately | won't work with negative arguments (as passed in by neigh)
   # Add instead.
-  wz.reduce(((x + xyoffset) << ybits) + y + xyoffset) { |a, coord| (a << wzbits) + coord + wzoffset }
+  xy = ((x + xyoffset) << ybits) + y + xyoffset
+  (xy << ((rounds + 1) * wzbits)) + wz.sum { |z|
+    1 << (z * wzbits)
+  }
 end
 
-def decompress(pos, dimensions, xyoffset, wzoffset, ybits, wzbits)
-  wz = pos.digits(1 << wzbits)[0, dimensions - 2].reverse
-  xy = pos >> (wzbits * (dimensions - 2))
+def decompress(pos, dimensions, rounds, xyoffset, ybits, wzbits)
+  wz = (0..rounds).flat_map { |n|
+    count = (pos >> (n * wzbits)) & ((1 << wzbits) - 1)
+    [n] * count
+  }
+  xy = pos >> (wzbits * (rounds + 1))
   y = xy & ((1 << ybits) - 1)
   x = xy >> ybits
-  [x - xyoffset, y - xyoffset] + wz.map { |c| c - wzoffset }
+  [x - xyoffset, y - xyoffset] + wz
 end
 
 # Precomputing this is the part that takes most of the time.
@@ -89,7 +98,7 @@ end
 def neigh_weights_for(pt, ds, rounds, wzbits, h)
   raise "non-representative #{pt}" unless representative?(pt)
   # Use a zero xyoffset since this weight map doesn't have xy component.
-  comp_pt = compress(0, 0, pt, 0, 1, 0, wzbits)
+  comp_pt = compress(0, 0, pt, rounds, 0, 0, wzbits)
   ds.each { |d|
     # We do need to calculate the representative,
     # so either we can pass in the dpos and decompress in here,
@@ -99,13 +108,10 @@ def neigh_weights_for(pt, ds, rounds, wzbits, h)
     # so we don't need to compute their outgoing neighbours
     next if npt.any? { |n| n.abs >= rounds }
     # Use a zero xyoffset since this weight map doesn't have xy component.
-    comp_neigh_rep = compress(0, 0, representative(npt), 0, 1, 0, wzbits)
+    # sorting not needed since counting compression is ordering-invariant
+    comp_neigh_rep = compress(0, 0, npt.map(&:abs), rounds, 0, 0, wzbits)
     h[comp_neigh_rep][comp_pt] += 1
   }
-end
-
-def representative(pt)
-  pt.map(&:abs).sort
 end
 
 def representative?(pt)
@@ -113,7 +119,7 @@ def representative?(pt)
 end
 
 def test_neigh_weights(dim)
-  dc = ->pt { decompress(pt, dim, 0, 1, 0, 4)[2..] }
+  dc = ->pt { decompress(pt, dim, 6, 0, 0, 4)[2..] }
   weights = neigh_weights(dim, 6, 4)
   puts weights.size
   weights.each { |pt, neighs|
@@ -128,15 +134,21 @@ end
 #test_neigh_weights(3)
 #exit 0
 
-def size(compressed, dimensions, wzbits)
+def size(compressed, dimensions, rounds, wzbits)
   perms_wz = fact(dimensions - 2)
+
   compressed.sum { |pos|
-    wz = pos.digits(1 << wzbits)[0, dimensions - 2]
-    perms_pos = wz.tally.map { |_, v| fact(v) }.reduce(1, :*)
-    # Since we're only storing non-negative wz,
-    # points count double for each non-zero wz coordinate they have.
-    # remember wz coordinates are offset by 1, so compare to 1.
-    2 ** wz.count { |c| c != 1 } * perms_wz / perms_pos
+    perms_pos = 1
+    mult = 1
+
+    (0..rounds).each { |n|
+      count = (pos >> (n * wzbits)) & ((1 << wzbits) - 1)
+      # points count double for each non-zero wz coordinate they have.
+      mult *= 2 ** count if n > 0
+      perms_pos *= fact(count)
+    }
+
+    mult * perms_wz / perms_pos
   }
 end
 
@@ -145,7 +157,7 @@ def fact(n)
 end
 
 def print_grids(poses, dimensions, rounds, ybits, wzbits)
-  coords = poses.map { |pos| decompress(pos, dimensions, rounds, 1, ybits, wzbits) }.freeze
+  coords = poses.map { |pos| decompress(pos, dimensions, rounds, rounds, ybits, wzbits) }.freeze
 
   chr = poses.to_h { |pos| [pos, ?#.freeze] }
   chr.default = ?..freeze
@@ -158,7 +170,7 @@ def print_grids(poses, dimensions, rounds, ybits, wzbits)
     p high_dims
     ranges[1].each { |y|
       ranges[0].each { |x|
-        coord = compress(x, y, dimensions > 2 ? high_dims : [], rounds, 1, ybits, wzbits)
+        coord = compress(x, y, dimensions > 2 ? high_dims : [], rounds, rounds, ybits, wzbits)
         print chr[coord]
       }
       puts
@@ -203,29 +215,29 @@ ARGF.each_with_index { |row, y|
   }
   height += 1
 }
-# because of only storing non-negatives,
-# w and z only span 0..rounds, which is rounds + 1 values.
-# However, we'll offset them by 1 so we can detect zeroes
-wzbits = (rounds + 2).bit_length
-# y, on the other hand, stores both positives and negatives,
 # can be -rounds to rounds, which is 2 * rounds + 1 values.
 ybits = (height + 2 * rounds + 1).bit_length
 init_active.freeze
-puts "ybits #{ybits} wzbits #{wzbits}" if verbose > 0
 
 dims.each { |dim|
+  # In dimensions beyond x and y,
+  # only store the count of each coordinate 0..6,
+  # which of course never exceeds the number of those higher dimensions.
+  wzbits = (dim - 2).bit_length
+  puts "ybits #{ybits} wzbits #{wzbits}" if verbose > 0
+
   t = Time.now
   weights = neigh_weights(dim, rounds, wzbits)
   puts "neigh weights took #{Time.now - t}" if verbose > 0 || dim > 4
   zs = [0] * (dim - 2)
-  active = init_active.map { |pos| compress(*pos, zs, rounds, 1, ybits, wzbits) }
+  active = init_active.map { |pos| compress(*pos, zs, rounds, rounds, ybits, wzbits) }
 
   rounds.times { |t|
-    active = step(active, dim, weights, ybits, wzbits).freeze
+    active = step(active, rounds, weights, ybits, wzbits).freeze
     if verbose > 0
-      puts "t=#{t + 1} pop=#{size(active, dim, wzbits)}"
+      puts "t=#{t + 1} pop=#{size(active, dim, rounds, wzbits)}"
       print_grids(active, dim, rounds, ybits, wzbits) if verbose > 1
     end
   }
-  puts size(active, dim, wzbits)
+  puts size(active, dim, rounds, wzbits)
 }
