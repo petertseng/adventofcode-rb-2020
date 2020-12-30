@@ -64,13 +64,13 @@ def decompress(pos, dimensions, rounds, xyoffset, ybits, wzbits)
 end
 
 # Precomputing this is the part that takes most of the time.
-# Speeding this up would help.
-# An implementation has sped this up by considering counts of 0..6,
-# rather than 3**n -1..1.
+# Speed this up by considering counts of 0..6,
 # https://www.reddit.com/r/adventofcode/comments/kfb6zx/day_17_getting_to_t6_at_for_higher_spoilerss/ggsx9e9
 def neigh_weights(dimensions, rounds, wzbits)
-  ds = [0, -1, 1].repeated_permutation(dimensions - 2).to_a
-  ds.shift
+  if dimensions <= rounds
+    ds = [0, -1, 1].repeated_permutation(dimensions - 2).to_a
+    ds.shift
+  end
   return Hash.new([].freeze).freeze if dimensions <= 2
 
   weights = Hash.new { |h, k| h[k] = Hash.new(0) }
@@ -79,7 +79,11 @@ def neigh_weights(dimensions, rounds, wzbits)
   # rule: May only mutate at index n and above.
   build_if_representative = ->n {
     if n == dimensions - 2
-      neigh_weights_for(prefix, ds, rounds, wzbits, weights)
+      if dimensions <= rounds
+        neigh_weights_by_ds(prefix, ds, rounds, wzbits, weights)
+      else
+        neigh_weights_by_count(prefix, rounds, wzbits, weights)
+      end
     else
       (prefix[n - 1]..rounds).each { |x|
         prefix[n] = x
@@ -95,7 +99,7 @@ def neigh_weights(dimensions, rounds, wzbits)
   weights.transform_values { |h| h.to_a.map(&:freeze).freeze }.freeze
 end
 
-def neigh_weights_for(pt, ds, rounds, wzbits, h)
+def neigh_weights_by_ds(pt, ds, rounds, wzbits, h)
   raise "non-representative #{pt}" unless representative?(pt)
   # Use a zero xyoffset since this weight map doesn't have xy component.
   comp_pt = compress(0, 0, pt, rounds, 0, 0, wzbits)
@@ -114,8 +118,48 @@ def neigh_weights_for(pt, ds, rounds, wzbits, h)
   }
 end
 
+def neigh_weights_by_count(pt, rounds, wzbits, h)
+  raise "non-representative #{pt}" unless representative?(pt)
+  counts = pt.tally
+  counts = (0..rounds).map { |n| counts[n] || 0 }.freeze
+  comp_pt = compress(0, 0, pt, rounds, 0, 0, wzbits)
+
+  dec_and_inc = ->(n, comp_so_far, mult, prev_count_minus_dec, prev_inc, all_zero) {
+    count = counts[n]
+    (0..count).each { |decrease|
+      new_comp = comp_so_far + (n == 0 ? 0 : (prev_count_minus_dec + decrease) << ((n - 1) * wzbits))
+      if n == rounds - 1
+        # points with any coordinate equal to # rounds only appear in the last iteration,
+        # so we don't need to compute their outgoing neighbours
+        # this means we can require that increase from rounds-1 -> rounds be 0,
+        # and require that decrease from rounds -> rounds-1 be count[rounds]
+        decrease_from_above = counts[rounds]
+        next if decrease == 0 && decrease_from_above == 0 && all_zero
+        final_comp = new_comp + ((count - decrease + prev_inc + decrease_from_above) << (n * wzbits))
+        h[final_comp][comp_pt] += mult * ncr(count, decrease)
+      else
+        (0..(count - decrease)).each { |increase|
+          dec_and_inc[
+            n + 1,
+            new_comp,
+            mult * ncr(count, decrease) * ncr(count - decrease, increase),
+            count - decrease - increase + prev_inc,
+            n == 0 ? (increase + decrease) : increase,
+            all_zero && increase == 0 && decrease == 0,
+          ]
+        }
+      end
+    }
+  }
+  dec_and_inc[0, 0, 1, nil, 0, true]
+end
+
 def representative?(pt)
   pt[0] >= 0 && pt.each_cons(2).all? { |a, b| a <= b }
+end
+
+def ncr(n, k)
+  (1..n).to_a.combination(k).size
 end
 
 def test_neigh_weights(dim)
